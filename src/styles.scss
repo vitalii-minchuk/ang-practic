@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+fieldset {
+    outline: none;
+    border: none;
+    background: transparent;
+}
+
 .container {
     max-width: 1270px;
     padding: 0 15px;
