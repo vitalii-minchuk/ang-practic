@@ -7,34 +7,40 @@ import {
   createUserSchema,
 } from "../../schemas/user-schema";
 import axios from "axios";
+import {
+  CreateUserSessionInputType,
+  createUserSessionSchema,
+} from "../../schemas/session-schema";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-function RegisterPage() {
-  const [registerError, setRegisterError] = useState("");
+function LoginPage() {
+  const [loginError, setLoginError] = useState("");
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CreateUserInputType>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<CreateUserSessionInputType>({
+    resolver: zodResolver(createUserSessionSchema),
   });
   const router = useRouter();
 
-  const submitHandler = async (values: CreateUserInputType) => {
+  const submitHandler = async (values: CreateUserSessionInputType) => {
     try {
-      await axios.post(`${baseUrl}/api/users`, values);
+      await axios.post(`${baseUrl}/api/sessions`, values, {
+        withCredentials: true,
+      });
       router.push("/");
     } catch (error: any) {
-      setRegisterError(error.message);
+      setLoginError(error.message);
     }
   };
 
   return (
     <>
-      {registerError && (
+      {loginError && (
         <p className="w-full text-center text-red-500 text-sm pl-3">
-          {registerError}
+          {loginError}
         </p>
       )}
       <form
@@ -42,7 +48,8 @@ function RegisterPage() {
         className="h-screen w-ful flex flex-col gap-4 justify-center items-center"
         onSubmit={handleSubmit(submitHandler)}
       >
-        <h2 className=" text-xl">Register</h2>
+        <h2 className=" text-xl">Login</h2>
+
         <div className="flex flex-col gap-1">
           <label className="pl-3">Email:</label>
           <input
@@ -54,20 +61,6 @@ function RegisterPage() {
 
           {errors?.email && (
             <p className="text-red-500 text-sm pl-3">{errors.email?.message}</p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="pl-3">Name:</label>
-          <input
-            id="name"
-            className="w-[300px] outline-purple-400 border border-slate-400 rounded-md px-3 py-2"
-            type="text"
-            {...register("name")}
-          />
-
-          {errors?.name && (
-            <p className="text-red-500 text-sm pl-3">{errors.name?.message}</p>
           )}
         </div>
 
@@ -87,22 +80,6 @@ function RegisterPage() {
           )}
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="pl-3">Confirm password:</label>
-          <input
-            id="passwordConfirmation"
-            className="w-[300px] outline-purple-400 border border-slate-400 rounded-md px-3 py-2"
-            type="password"
-            {...register("passwordConfirmation")}
-          />
-
-          {errors?.passwordConfirmation && (
-            <p className="text-red-500 text-sm pl-3">
-              {errors.passwordConfirmation?.message}
-            </p>
-          )}
-        </div>
-
         <button
           className="w-[300px] text-purple-50 tracking-widest uppercase mt-6 bg-purple-400 border border-slate-400 rounded-md px-3 py-2 hover:bg-purple-500"
           type="submit"
@@ -114,4 +91,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default LoginPage;
