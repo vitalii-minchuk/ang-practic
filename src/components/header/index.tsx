@@ -7,7 +7,7 @@ interface IHeader {
 function Header({ user }: IHeader) {
   return (
     <div className="w-full h-12 px-2 bg-purple-200 shadow-md flex justify-between items-center">
-      <h2>LOGO</h2>
+      <h2>LOGO PP</h2>
       {user && <p>{user.name}</p>}
     </div>
   );
